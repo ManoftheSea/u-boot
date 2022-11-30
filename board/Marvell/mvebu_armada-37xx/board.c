@@ -100,8 +100,11 @@ int board_late_init(void)
 		return 0;
 
 	/* Find free buffer in default_environment[] for new variables */
-	while (*ptr != '\0' && *(ptr+1) != '\0') ptr++;
-	ptr += 2;
+	if (*ptr != '\0') { // Defending against empty default env
+		while ((i = strlen(ptr)) != 0) {
+			ptr += i + 1; // ptr ends on next variable location
+		}
+	}
 
 	/*
 	 * Ensure that 'env default -a' does not erase permanent MAC addresses
